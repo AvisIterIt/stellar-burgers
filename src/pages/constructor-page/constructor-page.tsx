@@ -1,4 +1,4 @@
-import { useSelector } from '../../services/store';
+import { useDispatch, useSelector } from '../../services/store';
 
 import styles from './constructor-page.module.css';
 
@@ -6,14 +6,19 @@ import { BurgerIngredients } from '../../components';
 import { BurgerConstructor } from '../../components';
 import { Preloader } from '../../components/ui';
 import { FC } from 'react';
+import {
+  getIngredients,
+  isIngredientsLoading
+} from '../../services/ingredientSlice';
 
 export const ConstructorPage: FC = () => {
-  /** TODO: взять переменную из стора */
-  const isIngredientsLoading = false;
+  const isLoading = useSelector(isIngredientsLoading);
+  const dispatch = useDispatch();
 
   return (
     <>
-      {isIngredientsLoading ? (
+      <button onClick={() => dispatch(getIngredients())}>Click</button>
+      {isLoading ? (
         <Preloader />
       ) : (
         <main className={styles.containerMain}>
