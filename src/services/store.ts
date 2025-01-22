@@ -5,24 +5,23 @@ import {
   useDispatch as dispatchHook,
   useSelector as selectorHook
 } from 'react-redux';
-import ingredientSlice from './ingredientSlice';
-import { thunk } from 'redux-thunk';
+import ingredientSlice from './slices/ingredientSlice';
+import orderSlice from './slices/orderSlice';
+import constructorSlice from './slices/constructorSlice';
+import feedSlice from './slices/feedSlice';
+import userSlice from './slices/userSlice';
 
 const rootReducer = combineReducers({
-  ingredient: ingredientSlice
-}); // Заменить на импорт настоящего редьюсера
-
-// const serviceApi = createServiceApi('/some/url');
+  ingredient: ingredientSlice,
+  order: orderSlice,
+  constructorBurger: constructorSlice,
+  feed: feedSlice,
+  user: userSlice
+});
 
 const store = configureStore({
   reducer: rootReducer,
-  devTools: process.env.NODE_ENV !== 'production',
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      thunk: {
-        extraArgument: {}
-      }
-    })
+  devTools: process.env.NODE_ENV !== 'production'
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

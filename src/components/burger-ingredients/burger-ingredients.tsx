@@ -3,12 +3,26 @@ import { useInView } from 'react-intersection-observer';
 
 import { TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
+import { ingredientSlice } from '../../services/slices/ingredientSlice';
+import { useSelector } from '../../services/store';
+
+const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
+  arr.reduce(
+    (groups, item) => {
+      (groups[key(item)] ||= []).push(item);
+      return groups;
+    },
+    {} as Record<K, T[]>
+  );
 
 export const BurgerIngredients: FC = () => {
-  /** TODO: взять переменные из стора */
-  const buns: any[] = [];
-  const mains: any[] = [];
-  const sauces: any[] = [];
+  const ingredients = useSelector(ingredientSlice.selectors.ingredients);
+
+  const grouped = groupBy(ingredients, (item) => item.type);
+
+  const buns = grouped.bun ?? [];
+  const mains = grouped.main ?? [];
+  const sauces = grouped.sauce ?? [];
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
   const titleBunRef = useRef<HTMLHeadingElement>(null);

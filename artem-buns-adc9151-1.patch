@@ -1,0 +1,137 @@
+From adc915167a0bc1442307a8a41ae6317f96c96e39 Mon Sep 17 00:00:00 2001
+From: artur <example@a.b>
+Date: Wed, 15 Jan 2025 21:13:12 +0500
+Subject: [PATCH] 1
+
+---
+ .../burger-ingredients/burger-ingredients.tsx | 22 +++++++++++++++----
+ .../constructor-page/constructor-page.tsx     | 12 ++++++----
+ src/services/ingredientSlice.ts               |  6 ++---
+ src/services/store.ts                         | 12 ++--------
+ 4 files changed, 30 insertions(+), 22 deletions(-)
+
+diff --git a/src/components/burger-ingredients/burger-ingredients.tsx b/src/components/burger-ingredients/burger-ingredients.tsx
+index 4075084..fefd503 100644
+--- a/src/components/burger-ingredients/burger-ingredients.tsx
++++ b/src/components/burger-ingredients/burger-ingredients.tsx
+@@ -3,12 +3,26 @@ import { useInView } from 'react-intersection-observer';
+ 
+ import { TTabMode } from '@utils-types';
+ import { BurgerIngredientsUI } from '../ui/burger-ingredients';
++import { ingredientSlice } from '../../services/ingredientSlice';
++import { useSelector } from '../../services/store';
++
++const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
++  arr.reduce(
++    (groups, item) => {
++      (groups[key(item)] ||= []).push(item);
++      return groups;
++    },
++    {} as Record<K, T[]>
++  );
+ 
+ export const BurgerIngredients: FC = () => {
+-  /** TODO: взять переменные из стора */
+-  const buns: any[] = [];
+-  const mains: any[] = [];
+-  const sauces: any[] = [];
++  const ingredients = useSelector(ingredientSlice.selectors.ingredients);
++
++  const grouped = groupBy(ingredients, (item) => item.type);
++
++  const buns = grouped.bun ?? [];
++  const mains = grouped.main ?? [];
++  const sauces = grouped.sauce ?? [];
+ 
+   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
+   const titleBunRef = useRef<HTMLHeadingElement>(null);
+diff --git a/src/pages/constructor-page/constructor-page.tsx b/src/pages/constructor-page/constructor-page.tsx
+index 0cd64b5..67504a0 100644
+--- a/src/pages/constructor-page/constructor-page.tsx
++++ b/src/pages/constructor-page/constructor-page.tsx
+@@ -5,19 +5,23 @@ import styles from './constructor-page.module.css';
+ import { BurgerIngredients } from '../../components';
+ import { BurgerConstructor } from '../../components';
+ import { Preloader } from '../../components/ui';
+-import { FC } from 'react';
++import { FC, useEffect } from 'react';
+ import {
+   getIngredients,
+-  isIngredientsLoading
++  ingredientSlice
+ } from '../../services/ingredientSlice';
+ 
+ export const ConstructorPage: FC = () => {
+-  const isLoading = useSelector(isIngredientsLoading);
++  const isLoading = useSelector(ingredientSlice.selectors.loading);
++
+   const dispatch = useDispatch();
+ 
++  useEffect(() => {
++    dispatch(getIngredients());
++  }, []);
++
+   return (
+     <>
+-      <button onClick={() => dispatch(getIngredients())}>Click</button>
+       {isLoading ? (
+         <Preloader />
+       ) : (
+diff --git a/src/services/ingredientSlice.ts b/src/services/ingredientSlice.ts
+index b1a9651..3f7768e 100644
+--- a/src/services/ingredientSlice.ts
++++ b/src/services/ingredientSlice.ts
+@@ -24,7 +24,8 @@ export const ingredientSlice = createSlice({
+   initialState,
+   reducers: {},
+   selectors: {
+-    isIngredientsLoading: (state) => state.loading
++    loading: (state) => state.loading,
++    ingredients: (state) => state.ingredients
+   },
+   extraReducers: (builder) => {
+     builder
+@@ -37,7 +38,6 @@ export const ingredientSlice = createSlice({
+         state.error = action.error.message as string;
+       })
+       .addCase(getIngredients.fulfilled, (state, action) => {
+-        console.log(action);
+         state.loading = false;
+         state.error = null;
+         state.ingredients = action.payload;
+@@ -45,6 +45,4 @@ export const ingredientSlice = createSlice({
+   }
+ });
+ 
+-export const { isIngredientsLoading } = ingredientSlice.selectors;
+-
+ export default ingredientSlice.reducer;
+diff --git a/src/services/store.ts b/src/services/store.ts
+index 940797a..02ecd50 100644
+--- a/src/services/store.ts
++++ b/src/services/store.ts
+@@ -10,19 +10,11 @@ import { thunk } from 'redux-thunk';
+ 
+ const rootReducer = combineReducers({
+   ingredient: ingredientSlice
+-}); // Заменить на импорт настоящего редьюсера
+-
+-// const serviceApi = createServiceApi('/some/url');
++});
+ 
+ const store = configureStore({
+   reducer: rootReducer,
+-  devTools: process.env.NODE_ENV !== 'production',
+-  middleware: (getDefaultMiddleware) =>
+-    getDefaultMiddleware({
+-      thunk: {
+-        extraArgument: {}
+-      }
+-    })
++  devTools: process.env.NODE_ENV !== 'production'
+ });
+ 
+ export type RootState = ReturnType<typeof rootReducer>;
+-- 
+2.45.2.windows.1
+

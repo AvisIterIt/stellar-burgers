@@ -5,19 +5,22 @@ import styles from './constructor-page.module.css';
 import { BurgerIngredients } from '../../components';
 import { BurgerConstructor } from '../../components';
 import { Preloader } from '../../components/ui';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import {
   getIngredients,
-  isIngredientsLoading
-} from '../../services/ingredientSlice';
+  ingredientSlice
+} from '../../services/slices/ingredientSlice';
 
 export const ConstructorPage: FC = () => {
-  const isLoading = useSelector(isIngredientsLoading);
+  const isLoading = useSelector(ingredientSlice.selectors.loading);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getIngredients());
+  }, []);
 
   return (
     <>
-      <button onClick={() => dispatch(getIngredients())}>Click</button>
       {isLoading ? (
         <Preloader />
       ) : (
