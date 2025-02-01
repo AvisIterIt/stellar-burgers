@@ -3,7 +3,7 @@ import { useInView } from 'react-intersection-observer';
 
 import { TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
-import { ingredientSlice } from '../../services/slices/ingredientSlice';
+import { ingredientSlice } from '../../services/slices/ingredientSlice/ingredientSlice';
 import { useSelector } from '../../services/store';
 
 const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>

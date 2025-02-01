@@ -17,8 +17,8 @@ import { AppHeader } from '../app-header';
 import { OrderInfo } from '../order-info';
 import { useEffect } from 'react';
 import { useDispatch } from '../../services/store';
-import { getUser } from '../../services/slices/userSlice';
-import { getIngredients } from '../../services/slices/ingredientSlice';
+import { getUser } from '../../services/slices/userSlice/userSlice';
+import { getIngredients } from '../../services/slices/ingredientSlice/ingredientSlice';
 
 const App = () => {
   const location = useLocation();

@@ -1,8 +1,11 @@
 import { ProfileOrdersUI } from '@ui-pages';
 import { FC, useEffect } from 'react';
 import { useSelector } from '../../services/store';
-import { getOrdersAll, getUserState } from '../../services/slices/userSlice';
-import { getFeeds } from '../../services/slices/feedSlice';
+import {
+  getOrdersAll,
+  getUserState
+} from '../../services/slices/userSlice/userSlice';
+import { getFeeds } from '../../services/slices/feedSlice/feedSlice';
 import { Preloader } from '@ui';
 import { useDispatch } from './../../services/store';
 

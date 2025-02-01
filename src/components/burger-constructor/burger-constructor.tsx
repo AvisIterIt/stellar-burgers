@@ -3,13 +3,13 @@ import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../services/store';
-import { getUserState } from '../../services/slices/userSlice';
+import { getUserState } from '../../services/slices/userSlice/userSlice';
 import {
   getConstructorState,
   orderBurger,
   resetModal,
   setRequest
-} from './../../services/slices/constructorSlice';
+} from './../../services/slices/constructorSlice/constructorSlice';
 
 export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
