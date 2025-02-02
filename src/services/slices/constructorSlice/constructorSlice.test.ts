@@ -10,16 +10,6 @@ import { expect, test, describe } from '@jest/globals';
 
 describe('тестирование редьюсера constructorSlice', () => {
   describe('тестирование экшена addIngredient', () => {
-    const initialState = {
-      constructorItems: {
-        bun: null,
-        ingredients: []
-      },
-      loading: false,
-      orderRequest: false,
-      orderModalData: null,
-      error: null
-    };
     const expectedResult = {
       ...initialState,
       constructorItems: {
